@@ -30,7 +30,7 @@ def load_vqgan(config, checkpoint_path):
 class Vqgan(object):
   def __init__(self, cfg,ckpt,device):
     self.model = load_vqgan(load_config(cfg),ckpt)
-    self.model.to(DEVICE)
+    self.model.to(device)
 
   def _preprocess(self,x):
     x = 2.*x - 1.

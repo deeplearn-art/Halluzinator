@@ -1,6 +1,7 @@
 
 import clip
 import torch
+import PIL
 import torch.nn.functional as F
 from torchvision import transforms
 
@@ -21,7 +22,8 @@ class Perceptor(object):
 
   def encode_prompt(self,txt):
     if '/' in txt:
-      return self.encode_target_img(txt)
+      img = PIL.Image.open(txt)
+      return self.encode_target_img(img)
     else:
       tx = clip.tokenize(txt).to(self.device)
       return self.model.encode_text(tx).detach().clone()

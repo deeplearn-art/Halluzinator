@@ -1,4 +1,5 @@
 import torch
+from torchvision import transforms
 
 class Generator(torch.nn.Module):
   def __init__(self, model, optimizer, dim, device):

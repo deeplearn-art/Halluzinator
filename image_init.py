@@ -1,4 +1,5 @@
 import torch
+from torchvision import transforms
 
 def perlin_ms(octaves=[1, 1, 1, 1], width=2, height=2, grayscale=False, device):
 

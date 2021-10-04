@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from torchvision import transforms
+import PIL
 
 class Camera(object):
   def __init__(self,dim):

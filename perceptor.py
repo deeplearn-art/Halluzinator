@@ -1,26 +1,4 @@
 
-'''
-
-/content/halluzinator/perceptor.py in encode_prompt(self, txt)
-     24     if '/' in txt:
-     25       img = PIL.Image.open(txt)
----> 26       return self.encode_target_img(img)
-     27     else:
-     28       tx = clip.tokenize(txt).to(self.device)
-
-/content/halluzinator/perceptor.py in encode_target_img(self, img)
-     30 
-     31   def encode_target_img(self,img):
----> 32     im = torch.tensor(img).unsqueeze(0).permute(0, 3, 1, 2)
-     33     im = (F.interpolate(im,(self.size,self.size)) / 255).to(self.device)[:,:3]
-     34     return self.encode_image(im)
-
-RuntimeError: Could not infer dtype of PngImageFile
-
-
-'''
-
-
 import clip
 import torch
 import imageio

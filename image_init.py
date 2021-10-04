@@ -35,14 +35,14 @@ def perlin_ms(octaves=[1, 1, 1, 1], width=2, height=2, grayscale=False, device):
 
   return torch.cat(out_array)
 
-def generate_perlin(dim,grayscale=False): 
+def generate_perlin(dim,device,grayscale=False): 
   octave_base = 1
   octave_length = 7
   perlin_width = 1
   perlin_height = 1
   #perlin_octaves = [octave_base**-(i) for i in range(octave_length)] # default
   perlin_octaves = [1/2, 1/4, 1/8, 1/16, 1/32, 1/48, 1/64]
-  out = perlin_ms(perlin_octaves, perlin_width, perlin_height, grayscale)  
+  out = perlin_ms(perlin_octaves, perlin_width, perlin_height, grayscale,device)  
   if grayscale:
     out = transforms.Resize(dim)(out.unsqueeze(0))
     out = out.clamp(0, 1)

@@ -4,8 +4,9 @@ from torchvision import transforms
 import PIL
 
 class Camera(object):
-  def __init__(self,dim):
+  def __init__(self,dim,resample=None):
     self.dim = dim
+    self.resample = resample # PIL.Image.BILINEAR
     
   def move(self,img,moves,incs):
     for i,m in enumerate(moves):
@@ -87,9 +88,10 @@ class Camera(object):
 
   def rotate_img(self,img,inc):
     padding = int(max(self.dim)/4) 
-    PIL_img = PIL.Image.fromarray(img.astype('uint8'), 'RGB')
-    img = transforms.functional.pad(img=PIL_img, padding=padding, padding_mode='reflect')
-    img = transforms.functional.rotate(img, -inc, resample=PIL.Image.BILINEAR)
+    #PIL_img = PIL.Image.fromarray(img.astype('uint8'), 'RGB')
+    pil = transforms.ToPILImage()(img).convert('RGB')
+    img = transforms.functional.pad(img=img, padding=padding, padding_mode='reflect')
+    img = transforms.functional.rotate(img, -inc, resample=self.resample)
     img = transforms.functional.crop(img, padding, padding, sideH, sideW)
     return np.asarray(img)
   

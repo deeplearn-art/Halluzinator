@@ -1,15 +1,15 @@
 import torch
 from torchvision import transforms
 
-def perlin_ms(device, octaves=[1, 1, 1, 1], width=2, height=2, grayscale=False):
+def perlin_ms(octaves=[1, 1, 1, 1], width=2, height=2, grayscale=False):
 
   def interp(t):
     return 3 * t**2 - 2 * t ** 3
 
-  def perlin(device, width, height, scale=10):
-    gx, gy = torch.randn(2, width + 1, height + 1, 1, 1, device=device)
-    xs = torch.linspace(0, 1, scale + 1)[:-1, None].to(device)
-    ys = torch.linspace(0, 1, scale + 1)[None, :-1].to(device)
+  def perlin(width, height, scale=10):
+    gx, gy = torch.randn(2, width + 1, height + 1, 1, 1)
+    xs = torch.linspace(0, 1, scale + 1)[:-1, None]
+    ys = torch.linspace(0, 1, scale + 1)[None, :-1]
     wx = 1 - interp(xs)
     wy = 1 - interp(ys)
     dots = 0
@@ -35,14 +35,14 @@ def perlin_ms(device, octaves=[1, 1, 1, 1], width=2, height=2, grayscale=False):
 
   return torch.cat(out_array)
 
-def generate_perlin(dim,device,grayscale=False): 
+def generate_perlin(dim,grayscale=False): 
   octave_base = 1
   octave_length = 7
   perlin_width = 1
   perlin_height = 1
   #perlin_octaves = [octave_base**-(i) for i in range(octave_length)] # default
   perlin_octaves = [1/2, 1/4, 1/8, 1/16, 1/32, 1/48, 1/64]
-  out = perlin_ms(device, perlin_octaves, perlin_width, perlin_height, grayscale)  
+  out = perlin_ms(perlin_octaves, perlin_width, perlin_height, grayscale)  
   if grayscale:
     out = transforms.Resize(dim)(out.unsqueeze(0))
     out = out.clamp(0, 1)
@@ -54,8 +54,8 @@ def generate_perlin(dim,device,grayscale=False):
     pil = transforms.ToPILImage()(out.squeeze()).convert('RGB')
   return pil
 
-def initial_img(option,dim,device):
-    if option == "perlin":
-        return generate_perlin(dim,device)
-    elif option == "perlin grayscale":
-        return generate_perlin(dim,device,grayscale=True)
+def initial_img(option,dim):
+  if option == "perlin":
+      return generate_perlin(dim)
+  elif option == "perlin grayscale":
+      return generate_perlin(dim,grayscale=True)

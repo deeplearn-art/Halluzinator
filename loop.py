@@ -1,6 +1,7 @@
 import torch
 import numpy as np 
 import torch.nn.functional as F
+import random
 
 class Loop(object):
   def __init__(self, prc, gen, device, augs, print_fn=None, disp_fn=None):

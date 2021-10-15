@@ -16,13 +16,16 @@ class Loop(object):
     self.opt = None
     self.losses = []
     self.images = []
-    
+   
   def set_cam(self,cam):
     self.cam = cam  
 
   def set_options(self,opt):
-    self.opt = opt  
-
+    self.encs = []
+    for prompt in opt.prompts:
+      self.encs.append(self.prc.encode_prompt(prompt))
+    self.opt = opt    
+      
   def print(self,str):
     if self.print_fn is not None:
       self.print_fn(str)  
@@ -33,9 +36,8 @@ class Loop(object):
 
   def run(self):
     count = 0
-    self.opt.encs = self.encode_prompts()
     while(count < self.opt.total_count):
-      loss = self.similarity().mean()
+      loss = self.clip_loss().mean()
       self.print(f"loss {loss.item()}")  #TODO change to ui.console()
       self.losses.append(loss.item())
       self.gen.step(loss)
@@ -46,12 +48,20 @@ class Loop(object):
       count += 1  
     return self.opt 
   
-  def similarity(self):
+  def clip_loss(self):
     im = self.format_image(self.gen())
     cutouts = self.cutout(im)
     enc_imgs = self.prc.encode_image(cutouts).requires_grad_() 
-    sim =  10*-F.cosine_similarity(self.opt.encs, enc_imgs, -1)
-    return sim
+    total_loss = 0
+    for i,enc in enumerate(self.encs):
+      sim = F.cosine_similarity(enc, enc_imgs, -1)
+      w = self.opt.weights[i]
+      if w > 0:
+        loss = w * (1 - sim)
+      else:
+        loss = -1 * w * sim  
+      total_loss += loss
+    return total_loss
   
   def checkin(self):
     im_out = (self.gen().cpu().clip(-1, 1) + 1) / 2 
@@ -120,14 +130,3 @@ class Loop(object):
     if self.opt.frame_count > 1 and not cam_off:  
       img = self.cam.move(img,self.opt.moves,self.opt.incs)
       self.gen.register(img,slerp_val=self.opt.slerp_val)
-
-  def losses(self):
-    return self.losses
-   
-  def encode_prompts(self):
-    t = 0
-    for i,prompt in enumerate(self.opt.prompts):
-      enc = self.prc.encode_prompt(prompt)
-      t += enc * self.opt.weights[i]
-    return t
-  

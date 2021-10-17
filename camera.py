@@ -87,12 +87,13 @@ class Camera(object):
     return ret  
 
   def rotate_img(self,img,inc):
+    h,w = self.dim
     padding = int(max(self.dim)/4) 
     #PIL_img = PIL.Image.fromarray(img.astype('uint8'), 'RGB')
     pil = transforms.ToPILImage()(img).convert('RGB')
     img = transforms.functional.pad(img=pil, padding=padding, padding_mode='reflect')
     img = transforms.functional.rotate(img, -inc, resample=self.resample)
-    img = transforms.functional.crop(img, padding, padding, sideH, sideW)
+    img = transforms.functional.crop(img, padding, padding, h, w)
     return np.asarray(img)
   
 

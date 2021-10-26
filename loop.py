@@ -16,6 +16,7 @@ class Loop(object):
     self.opt = None
     self.losses = []
     self.images = []
+    self.denoise = 0.5
    
   def set_cam(self,cam):
     self.cam = cam  
@@ -37,7 +38,10 @@ class Loop(object):
   def run(self):
     count = 0
     while(count < self.opt.total_count):
-      loss = self.clip_loss().mean()
+      im = self.format_image(self.gen())
+      loss_t = self.clip_loss(im)
+      loss_t += self.lossTV(im,opt.denoise)
+      loss = loss_t.mean()
       self.print(f"loss {loss.item()}")  #TODO change to ui.console()
       self.losses.append(loss.item())
       self.gen.step(loss)
@@ -48,8 +52,7 @@ class Loop(object):
       count += 1  
     return self.opt 
   
-  def clip_loss(self):
-    im = self.format_image(self.gen())
+  def clip_loss(self, im):
     cutouts = self.cutout(im)
     enc_imgs = self.prc.encode_image(cutouts).requires_grad_() 
     total_loss = 0
@@ -62,6 +65,12 @@ class Loop(object):
         loss = -1 * w * sim  
       total_loss += loss
     return total_loss
+
+  def lossTV(self,image, denoise):
+    Y = (image[:,:,1:,:] - image[:,:,:-1,:]).abs().mean()
+    X = (image[:,:,:,1:] - image[:,:,:,:-1]).abs().mean()
+    loss = (X + Y) * 0.5 * denoise
+    return loss  
   
   def checkin(self):
     im_out = (self.gen().cpu().clip(-1, 1) + 1) / 2 

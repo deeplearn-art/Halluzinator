@@ -85,11 +85,11 @@ class Loop(object):
       self.write_img(augs_img)
       self.display('augs.jpg')
   
-  def rewind(self,frame): #TODO needs testing
+  def undo(self,interval): #TODO needs testing
     #print(f"{len(images)} images before edit")
-    self.images = self.images[:frame+1]
+    self.images = self.images[:-interval]
     #print(f"{len(images)} images after edit")
-    self.opt.frame_count = frame
+    self.opt.frame_count -= interval
     self.gen.register(self.images[-1])   
 
   def cutout(self,into):

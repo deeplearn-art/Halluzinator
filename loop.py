@@ -40,7 +40,7 @@ class Loop(object):
     while(count < self.opt.total_count):
       im = self.format_image(self.gen())
       loss_t = self.clip_loss(im)
-      loss_t += self.lossTV(im,opt.denoise)
+      loss_t += self.lossTV(im,self.opt.denoise)
       loss = loss_t.mean()
       self.print(f"loss {loss.item()}")  #TODO change to ui.console()
       self.losses.append(loss.item())

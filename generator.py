@@ -14,6 +14,8 @@ class Generator(torch.nn.Module):
     with torch.no_grad():
       if is_numpy:
         im = self.np2tensor(img)
+      else: 
+        im = img  
       im = transforms.Resize(self.dim)(im)
       im = im.to(self.device)
       z = self.encode(im)

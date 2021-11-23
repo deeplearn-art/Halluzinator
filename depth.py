@@ -12,8 +12,9 @@ import torch.nn.functional as F
 from torchvision import transforms as T
 from torchvision.transforms import functional as TF
 
-sys.path.append(os.path.join(os.path.dirname(__file__), 'adabins'))
-from infer import InferenceHelper
+### these are in nb now 
+#sys.path.append(os.path.join(os.path.dirname(__file__), 'adabins'))
+#from infer import InferenceHelper
 
 def numpy2tensor(imgArray):
     im = torch.unsqueeze(T.ToTensor()(imgArray), 0)
@@ -27,7 +28,7 @@ def save_img(img, fname=None):
         imsave(fname, np.array(img))
 
 def init_adabins(size, model_path='models/AdaBins_nyu.pt', mask_path='lib/adabins/mask.jpg', n_bins=256, min_val=1e-3, max_val=10, mask_blur=33):
-    infer_helper = InferenceHelper(model_path)
+    infer_helper = InferenceHelper()
     # # adjust AdaBins' internal depth max and min if needed; not tested yet
     # infer_helper.max_depth = infer_helper.max_depth * 50
     # infer_helper.min_depth = infer_helper.min_depth * 1

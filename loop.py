@@ -39,6 +39,7 @@ class Loop(object):
     count = 0
     while(count < self.opt.total_count):
       im = self.format_image(self.gen())
+      
       loss_t = self.clip_loss(im)
       loss_t += self.lossTV(im,self.opt.denoise)
       loss = loss_t.mean()
@@ -48,6 +49,7 @@ class Loop(object):
     
       if count % self.opt.burnin == 0:
         self.checkin()
+      
       self.print(f"count {count} frames :{self.opt.frame_count}")  #TODO change to ui.console()
       count += 1  
     return self.opt 
@@ -73,9 +75,9 @@ class Loop(object):
     return loss  
   
   def checkin(self):
-    im_out = (self.gen().cpu().clip(-1, 1) + 1) / 2 
-    im = im_out[0].detach().numpy()
-    self.write_img(im) 
+    im_out = (self.gen().clip(-1, 1) + 1) / 2 
+    im_np = im_out[0].cpu().detach().numpy()
+    self.write_img(im_np,im_out) 
     self.opt.frame_count += 1
     if self.opt.count % self.opt.display_interval == 0:
       self.display('view.jpg') #TODO ui call
@@ -119,7 +121,7 @@ class Loop(object):
     x = (x + 1.)/2
     return x
 
-  def write_img(self,img):
+  def write_img(self,img,im):
     #img = img.detach().numpy()
     img = np.array(img)[:,:,:]
     img = np.transpose(img, (1, 2, 0))
@@ -132,10 +134,14 @@ class Loop(object):
     imageio.imwrite('view.jpg', img)
     imageio.imwrite(f"{self.opt.save_path}/{self.opt.frame_count:05}.jpg", np.array(img))
     if (self.cam != None):
-      self.camera(img)
+      self.camera(img,im)
       
-  def camera(self,img):
+  def camera(self,img,im):
     cam_off = all(m == 'off' for m in self.opt.moves) or self.opt.moves == []
     if self.opt.frame_count > 1 and not cam_off:  
       img = self.cam.move(img,self.opt.moves,self.opt.incs)
-      self.gen.register(img,slerp_val=self.opt.slerp_val)
+    if (DepthStrength > 0):       
+      im = depth_transform(im, img, depth_infer, depth_mask, size, DepthStrength,scale=0.97,shift=[-2,0])    
+      self.gen.register(im,slerp_val=self.opt.slerp_val,is_numpy=False)
+    else:
+      self.gen.register(img,slerp_val=self.opt.slerp_val)  

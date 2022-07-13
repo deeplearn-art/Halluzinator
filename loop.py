@@ -140,8 +140,5 @@ class Loop(object):
     cam_off = all(m == 'off' for m in self.opt.moves) or self.opt.moves == []
     if self.opt.frame_count > 1 and not cam_off:  
       img = self.cam.move(img,self.opt.moves,self.opt.incs)
-    if (DepthStrength > 0):       
-      im = depth_transform(im, img, depth_infer, depth_mask, size, DepthStrength,scale=0.97,shift=[-2,0])    
-      self.gen.register(im,slerp_val=self.opt.slerp_val,is_numpy=False)
-    else:
+   
       self.gen.register(img,slerp_val=self.opt.slerp_val)  

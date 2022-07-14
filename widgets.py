@@ -218,19 +218,6 @@ def UI(opt=default_opt,interval=20):
   noise_slider,slerp_slider,burnin_slider,lr_slider,denoise_slider,px_pf_slider,px_pf_slider_2,
   cutn_slider,cam_dd,cam_dd_2,text_prompt_1,text_prompt_2,weight_1,weight_2,chk_show_augs)
  
-(center,v,chk_show_augs, prompt1_h, prompt2_h, console, outpic,
-frame_txt,frame_chk,interval_txt,
-noise_slider,slerp_slider,burnin_slider,lr_slider,denoise_slider,px_pf_slider,px_pf_slider_2,
-cutn_slider,cam_dd,cam_dd_2,text_prompt_1,text_prompt_2,weight_1,weight_2,chk_show_augs) = UI()
-
-ui_elems = (center,v,chk_show_augs, prompt1_h, prompt2_h, console, outpic,
-frame_txt,frame_chk,interval_txt,
-noise_slider,slerp_slider,burnin_slider,lr_slider,denoise_slider,px_pf_slider,px_pf_slider_2,
-cutn_slider,cam_dd,cam_dd_2,text_prompt_1,text_prompt_2,weight_1,weight_2,chk_show_augs) 
-
-interval_value = 20
-if not firstrun:
-  reload = True
 
 def set_css_in_cell_output():
     display(HTML('''

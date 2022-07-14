@@ -1,3 +1,5 @@
+import ipywidgets as ipy
+
 darktheme = True #@param {type:"boolean"}
 
 default_opt = {

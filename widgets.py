@@ -1,7 +1,5 @@
 import ipywidgets as ipy
 
-darktheme = True #@param {type:"boolean"}
-
 default_opt = {
 "noise": 0.00, 
 "slerp_val": 0.35, 
@@ -219,13 +217,3 @@ def UI(opt=default_opt,interval=20):
   cutn_slider,cam_dd,cam_dd_2,text_prompt_1,text_prompt_2,weight_1,weight_2,chk_show_augs)
  
 
-def set_css_in_cell_output():
-    display(HTML('''
-        <style>
-            .jupyter-widgets {color: #87effa !important;}
-            .widget-label {color: #d5d5d5 !important;}
-            .widget-readout {color:  #7dcea0 !important;}
-        </style>
-    '''))
-if darktheme:
-  get_ipython().events.register('pre_run_cell', set_css_in_cell_output)

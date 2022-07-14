@@ -32,3 +32,7 @@ class Perceptor(object):
     im = torch.tensor(img).unsqueeze(0).permute(0, 3, 1, 2)
     im = (F.interpolate(im,(self.size,self.size)) / 255).to(self.device)[:,:3]
     return self.encode_image(im)
+
+  def encode_image(self,im):
+    img_enc = self.nom(im).to(self.device)
+    return self.model.encode_image(img_enc)  

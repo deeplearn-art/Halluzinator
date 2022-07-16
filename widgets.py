@@ -34,11 +34,11 @@ def UI(opt=default_opt,interval=20):
   )
   #TODO?
   denoise_slider = ipy.FloatSlider(
-      value=opt["denoise"],
+      value=opt["smoothness"],
       min=0.00,
       max=1.00,
       step=0.01,
-      description='denoise',
+      description='smoothness',
       disabled=False,
       continuous_update=False,
       orientation='vertical',
@@ -58,11 +58,11 @@ def UI(opt=default_opt,interval=20):
       readout_format='.3f',
   )
   cutn_slider = ipy.IntSlider(
-      value=opt["cutn"],
+      value=opt["cuts"],
       min=0,
       max=128,
       step=4,
-      description='cutn',
+      description='cuts',
       disabled=False,
       continuous_update=False,
       orientation='vertical',
@@ -82,7 +82,7 @@ def UI(opt=default_opt,interval=20):
   )
   frame_chk = ipy.Checkbox(
       value=False,
-      description='Use frame',
+      description='Rewind',
       disabled=False,
       indent=False
   )
@@ -114,7 +114,7 @@ def UI(opt=default_opt,interval=20):
       min=0.00,
       max=1.00,
       step=0.01,
-      description='slerp',
+      description='Loosen',
       disabled=False,
       continuous_update=False,
       orientation='Horizontal',

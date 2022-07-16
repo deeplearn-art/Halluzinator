@@ -34,7 +34,7 @@ def UI(opt=default_opt,interval=20):
   )
   #TODO?
   denoise_slider = ipy.FloatSlider(
-      value=opt["smoothness"],
+      value=opt["denoise"],
       min=0.00,
       max=1.00,
       step=0.01,
@@ -58,7 +58,7 @@ def UI(opt=default_opt,interval=20):
       readout_format='.3f',
   )
   cutn_slider = ipy.IntSlider(
-      value=opt["cuts"],
+      value=opt["cutn"],
       min=0,
       max=128,
       step=4,
@@ -114,7 +114,7 @@ def UI(opt=default_opt,interval=20):
       min=0.00,
       max=1.00,
       step=0.01,
-      description='Loosen',
+      description='looseness',
       disabled=False,
       continuous_update=False,
       orientation='Horizontal',
